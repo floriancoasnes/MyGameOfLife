@@ -61,14 +61,32 @@ class Window:
         self.damier.cells[coordx][coordy]=1
         self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='black')
 
+    def click_droit(self,
+                     event):  # fonction rendant vivante la cellule cliquÃ©e donc met la valeur 1 pour la cellule cliquÃ©e au dico_case
+        x = event.x - ((event.x - self.padding / 2) % self.damier.witdthofacell)
+        y = event.y - ((event.y - self.padding / 2) % self.damier.witdthofacell)
+        coordx = int((x - self.padding / 2) / self.damier.witdthofacell)
+        coordy = int((y - self.padding / 2) / self.damier.witdthofacell)
+
+        self.damier.cells[coordx][coordy] = 0
+        self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='white')
+
     def bindcanevent(self):
         self.can1.bind("<B1-Motion>", self.click_gauche)
         self.can1.bind("<Button-1>", self.click_gauche)
+
+        self.can1.bind("<B3-Motion>", self.click_droit)
+        self.can1.bind("<Button-3>", self.click_droit)
+
         self.can1.bind("<ButtonRelease-1>", self.release)
+        self.can1.bind("<ButtonRelease-3>", self.release)
         self.can1.bind()
 
-    def release(self,event):
+    def release(self, event):
         result = np.where(self.damier.cells==1)
+        tmp=[]
         for i in range(len(result[0])):
-            self.damier.coordalivecell.append([result[0][i], result[1][i]])
+            tmp.append([result[0][i], result[1][i]])
+        self.damier.coordalivecell=tmp
+
 
