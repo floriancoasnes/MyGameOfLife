@@ -1,5 +1,6 @@
 from tkinter import *
 import numpy as np
+import array as arr
 
 class Damier:
 
@@ -7,5 +8,6 @@ class Damier:
         self.witdthofacell= witdthofacell
         self.numberOfLine=numberOfLine
         self.numberOfColumn=numberOfColumn
-        self.cells=np.zeros((numberOfLine, numberOfColumn))
+        self.cells=np.zeros((numberOfColumn, numberOfLine))
+        self.coordalivecell=[]
 
