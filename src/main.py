@@ -1,9 +1,11 @@
 from src.Damier import Damier
+from src.Rule import Rule
 from src.Window import Window
 
 witdthofacell=30
-numberOfLine=20
-numberOfColumn=40
+numberOfLine=10
+numberOfColumn=20
 
 mondamier=Damier(witdthofacell, numberOfLine, numberOfColumn)
-myWindow=Window(mondamier)
+regles=Rule('classic')
+myWindow=Window(mondamier,regles)

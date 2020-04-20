@@ -1,32 +1,38 @@
 from tkinter import *
 import numpy as np
 
+from src.Damier import Damier
+
 
 class Window:
 
-    def __init__(self, damier):
+    def __init__(self, damier,regles):
+        self.flag = 0
+        self.vitesse=500
         self.damier = damier
         self.padding=10
         self.window_width = damier.numberOfColumn * damier.witdthofacell
         self.window_height = damier.numberOfLine * damier.witdthofacell
 
+        self.rules=regles
         self.fen1 = Tk()
         self.can1 = Canvas(self.fen1, width=self.window_width + self.padding, height=self.window_height + self.padding,
                       bg='white')
-        self.bindcanevent()
+
         self.createthewindow()
-        print(damier.coordalivecell)
 
     def createthewindow(self):
 
         self.can1.pack(side=TOP, padx=5, pady=5)
 
-        b1 = Button(self.fen1, text='Go!')
-        b2 = Button(self.fen1, text='Stop')
+        b1 = Button(self.fen1, text='Go!', command=self.go)
+        b2 = Button(self.fen1, text='Stop', command=self.stop)
         b1.pack(side=LEFT, padx=3, pady=3)
         b2.pack(side=LEFT, padx=3, pady=3)
-        b3 = Button(self.fen1, text='Canon planeur')
+        b3 = Button(self.fen1, text='step >', command=self.stepByStep)
         b3.pack(side=LEFT, padx=3, pady=3)
+        b4 = Button(self.fen1, text='Reset', command=self.reset)
+        b4.pack(side=LEFT, padx=3, pady=3)
 
         entree = Entry(self.fen1)
         entree.pack(side=RIGHT)
@@ -36,6 +42,7 @@ class Window:
 
         self.drawthelines(self.can1, self.damier.witdthofacell, self.damier.numberOfLine, self.damier.numberOfColumn)
 
+        self.bindcanevent()
         self.fen1.mainloop()
 
     def drawthelines(self, can1, widthofacell, numberOfLine, numberOfColumn):
@@ -57,8 +64,7 @@ class Window:
         y = event.y- ((event.y-self.padding/2) % self.damier.witdthofacell)
         coordx=int((x-self.padding/2) / self.damier.witdthofacell)
         coordy=int((y-self.padding/2) / self.damier.witdthofacell)
-
-        self.damier.cells[coordx][coordy]=1
+        self.damier.cells[coordy][coordx]=1
         self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='black')
 
     def click_droit(self,
@@ -68,7 +74,7 @@ class Window:
         coordx = int((x - self.padding / 2) / self.damier.witdthofacell)
         coordy = int((y - self.padding / 2) / self.damier.witdthofacell)
 
-        self.damier.cells[coordx][coordy] = 0
+        self.damier.cells[coordy][coordx] = 0
         self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='white')
 
     def bindcanevent(self):
@@ -88,5 +94,76 @@ class Window:
         for i in range(len(result[0])):
             tmp.append([result[0][i], result[1][i]])
         self.damier.coordalivecell=tmp
+
+
+    def drawcell(self, color, coordx,coordy):
+        x=(self.damier.witdthofacell*(coordx)+self.padding/2)
+        y=(self.damier.witdthofacell*(coordy)+self.padding/2)
+
+        if (color==0):
+            self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='white')
+        elif (color==1):
+            print("prout")
+            self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='black')
+
+
+    def go(self):
+        if self.flag == 0:
+            self.flag = 1
+            self.play()
+
+    def stop(self):
+        self.flag=0
+
+    def stepByStep(self):
+        self.flag=1
+        self.playByStep()
+
+    def reset(self):
+        self.damier=Damier(self.damier.witdthofacell, self.damier.numberOfLine, self.damier.numberOfColumn)
+        v = 0
+        while v != self.damier.numberOfColumn:
+            w = 0
+            while w != self.damier.numberOfLine:
+                self.drawcell(self.damier.cells[v][w], v, w)
+                w+=1
+            v += 1
+        self.flag=0
+
+
+    def play(self):  # fonction comptant le nombre de cellules vivantes autour de chaque cellule
+        v = 0
+        while v != self.damier.numberOfColumn:
+            w = 0
+            while w != self.damier.numberOfLine:
+                self.rules.ruledecision(self.damier, w, v)
+                self.drawcell(self.damier.nextcells[v][w], v, w)
+                w+=1
+            v+=1
+
+        self.damier.cells=self.damier.nextcells
+        self.damier.setToZerosNextCells()
+
+        if self.flag > 0:
+            self.fen1.after(self.vitesse, self.play)
+            self.flag+=1
+
+
+    def playByStep(self):
+        v = 0
+        while v != self.damier.numberOfColumn :
+            w = 0
+            while w != self.damier.numberOfLine:
+                self.rules.ruledecision(self.damier, v-1, w-1)
+                self.drawcell(self.damier.nextcells[w][v], w, v)
+                w += 1
+            v += 1
+
+        print("avant",self.damier.cells)
+        self.damier.cells = self.damier.nextcells
+        self.damier.setToZerosNextCells()
+        print("apres",self.damier.cells)
+
+        self.flag+=1
 
 

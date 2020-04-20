@@ -8,6 +8,10 @@ class Damier:
         self.witdthofacell= witdthofacell
         self.numberOfLine=numberOfLine
         self.numberOfColumn=numberOfColumn
-        self.cells=np.zeros((numberOfColumn, numberOfLine))
+        self.cells=np.zeros((numberOfLine,numberOfColumn))
+        self.nextcells=np.zeros((numberOfLine,numberOfColumn))
         self.coordalivecell=[]
+        self.nextcoordalivecell=[]
 
+    def setToZerosNextCells(self):
+        self.nextcells=np.zeros((self.numberOfLine,self.numberOfColumn))
