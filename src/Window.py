@@ -8,7 +8,7 @@ class Window:
 
     def __init__(self, damier,regles):
         self.flag = 0
-        self.vitesse=500
+        self.vitesse=50
         self.damier = damier
         self.padding=10
         self.window_width = damier.numberOfColumn * damier.witdthofacell
@@ -64,8 +64,9 @@ class Window:
         y = event.y- ((event.y-self.padding/2) % self.damier.witdthofacell)
         coordx=int((x-self.padding/2) / self.damier.witdthofacell)
         coordy=int((y-self.padding/2) / self.damier.witdthofacell)
-        self.damier.cells[coordy][coordx]=1
-        self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='black')
+        if(coordx>=0 and coordy>=0 and coordx<self.damier.numberOfLine and coordy<self.damier.numberOfColumn):
+            self.damier.cells[coordy][coordx]=1
+            self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='black')
 
     def click_droit(self,
                      event):  # fonction rendant vivante la cellule cliquÃ©e donc met la valeur 1 pour la cellule cliquÃ©e au dico_case
@@ -84,16 +85,8 @@ class Window:
         self.can1.bind("<B3-Motion>", self.click_droit)
         self.can1.bind("<Button-3>", self.click_droit)
 
-        self.can1.bind("<ButtonRelease-1>", self.release)
-        self.can1.bind("<ButtonRelease-3>", self.release)
         self.can1.bind()
 
-    def release(self, event):
-        result = np.where(self.damier.cells==1)
-        tmp=[]
-        for i in range(len(result[0])):
-            tmp.append([result[0][i], result[1][i]])
-        self.damier.coordalivecell=tmp
 
 
     def drawcell(self, color, coordx,coordy):
@@ -106,6 +99,7 @@ class Window:
         elif (color==1):
             self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='black')
 
+        del x,y,coordx,coordy,color
 
     def go(self):
         if self.flag == 0:
@@ -125,24 +119,31 @@ class Window:
         while v != self.damier.numberOfColumn:
             w = 0
             while w != self.damier.numberOfLine:
-                self.drawcell(self.damier.cells[v][w], v, w)
+                self.drawcell(self.damier.cells[w][v], v, w)
                 w+=1
             v += 1
+
+        del v
+        del w
         self.flag=0
 
 
     def play(self):  # fonction comptant le nombre de cellules vivantes autour de chaque cellule
+        self.can1.delete(ALL)
         v = 0
         while v != self.damier.numberOfColumn:
             w = 0
             while w != self.damier.numberOfLine:
-                self.rules.ruledecision(self.damier, w, v)
-                self.drawcell(self.damier.nextcells[v][w], v, w)
-                w+=1
-            v+=1
+                self.rules.ruledecision(self.damier, v, w)
+                self.drawcell(self.damier.cells[w][v], v, w)
+                w += 1
+            v += 1
 
         self.damier.cells=self.damier.nextcells
         self.damier.setToZerosNextCells()
+
+        del v
+        del w
 
         if self.flag > 0:
             self.fen1.after(self.vitesse, self.play)
@@ -157,13 +158,13 @@ class Window:
                 self.rules.ruledecision(self.damier, v, w)
                 self.drawcell(self.damier.cells[w][v], v, w)
                 w += 1
-            # self.drawcell(self.damier.cells[w][v], v, w)
             v += 1
 
-        print("avant",self.damier.cells)
+        del v
+        del w
+
         self.damier.cells = self.damier.nextcells
         self.damier.setToZerosNextCells()
-        print("apres",self.damier.cells)
 
         self.flag+=1
 

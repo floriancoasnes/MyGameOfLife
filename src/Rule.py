@@ -21,7 +21,6 @@ class Rule:
             numberofclosealivecell = damier.cells[x - 1][y - 1] + damier.cells[x][y - 1] + damier.cells[x - 1][y]
 
         elif (y == 0):
-            print("biite",x,y, damier.cells[x][y])
             numberofclosealivecell = damier.cells[x + 1][y] + damier.cells[x][y + 1] + damier.cells[x + 1][y + 1] + \
                                      damier.cells[x - 1][y + 1] + damier.cells[x - 1][y]
 
@@ -41,6 +40,9 @@ class Rule:
             numberofclosealivecell = damier.cells[x - 1][y - 1] + damier.cells[x][y - 1] + damier.cells[x - 1][y] + \
                                      damier.cells[x + 1][y] + damier.cells[x + 1][y - 1] + damier.cells[x - 1][y + 1] + \
                                      damier.cells[x][y + 1] + damier.cells[x + 1][y + 1]
+        del x
+        del y
+        del positioninit
         return numberofclosealivecell
 
     def ruledecision(self,damier,x,y):
@@ -51,5 +53,10 @@ class Rule:
             damier.nextcells[y][x]=0
         else:
             damier.nextcells[y][x]=damier.cells[y][x]
+
+        del numberofclosecell
+        del x
+        del y
+
 
 
