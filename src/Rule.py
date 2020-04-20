@@ -11,16 +11,17 @@ class Rule:
         if (x == 0 and y == 0):
             numberofclosealivecell = damier.cells[x + 1][y] + damier.cells[x][y + 1] + damier.cells[x + 1][y + 1]
 
-        elif (x == damier.numberOfColumn - 1 and y == 0):
+        elif (x == damier.numberOfLine - 1 and y == 0):
             numberofclosealivecell = damier.cells[x - 1][y] + damier.cells[x][y + 1] + damier.cells[x - 1][y + 1]
 
-        elif (x == 0 and y == damier.numberOfLine - 1):
+        elif (x == 0 and y == damier.numberOfColumn - 1):
             numberofclosealivecell = damier.cells[x][y - 1] + damier.cells[x + 1][y] + damier.cells[x + 1][y - 1]
 
         elif (x == damier.numberOfLine - 1 and y == damier.numberOfColumn - 1):
             numberofclosealivecell = damier.cells[x - 1][y - 1] + damier.cells[x][y - 1] + damier.cells[x - 1][y]
 
         elif (y == 0):
+            print("biite",x,y, damier.cells[x][y])
             numberofclosealivecell = damier.cells[x + 1][y] + damier.cells[x][y + 1] + damier.cells[x + 1][y + 1] + \
                                      damier.cells[x - 1][y + 1] + damier.cells[x - 1][y]
 
@@ -28,13 +29,14 @@ class Rule:
             numberofclosealivecell = damier.cells[x + 1][y] + damier.cells[x][y + 1] + damier.cells[x + 1][y + 1] + \
                                      damier.cells[x][y - 1] + damier.cells[x + 1][y - 1]
 
-        elif (x == damier.numberOfColumn - 1):
-            numberofclosealivecell = damier.cells[x - 1][y] + damier.cells[x][y + 1] + damier.cells[x - 1][y + 1] + \
-                                     damier.cells[x][y - 1] + damier.cells[x - 1][y - 1]
-
-        elif (y == damier.numberOfLine - 1):
+        elif (y == damier.numberOfColumn - 1):
             numberofclosealivecell = damier.cells[x - 1][y - 1] + damier.cells[x][y - 1] + damier.cells[x - 1][y] + \
                                      damier.cells[x + 1][y] + damier.cells[x + 1][y - 1]
+
+
+        elif (x == damier.numberOfLine - 1):
+            numberofclosealivecell = damier.cells[x - 1][y] + damier.cells[x][y + 1] + damier.cells[x - 1][y + 1] + \
+                                     damier.cells[x][y - 1] + damier.cells[x - 1][y - 1]
         else:
             numberofclosealivecell = damier.cells[x - 1][y - 1] + damier.cells[x][y - 1] + damier.cells[x - 1][y] + \
                                      damier.cells[x + 1][y] + damier.cells[x + 1][y - 1] + damier.cells[x - 1][y + 1] + \

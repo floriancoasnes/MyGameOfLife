@@ -100,10 +100,10 @@ class Window:
         x=(self.damier.witdthofacell*(coordx)+self.padding/2)
         y=(self.damier.witdthofacell*(coordy)+self.padding/2)
 
+
         if (color==0):
             self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='white')
         elif (color==1):
-            print("prout")
             self.can1.create_rectangle(x, y, x + self.damier.witdthofacell, y + self.damier.witdthofacell, fill='black')
 
 
@@ -151,12 +151,13 @@ class Window:
 
     def playByStep(self):
         v = 0
-        while v != self.damier.numberOfColumn :
+        while v != self.damier.numberOfColumn:
             w = 0
             while w != self.damier.numberOfLine:
-                self.rules.ruledecision(self.damier, v-1, w-1)
-                self.drawcell(self.damier.nextcells[w][v], w, v)
+                self.rules.ruledecision(self.damier, v, w)
+                self.drawcell(self.damier.cells[w][v], v, w)
                 w += 1
+            # self.drawcell(self.damier.cells[w][v], v, w)
             v += 1
 
         print("avant",self.damier.cells)
