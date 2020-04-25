@@ -46,7 +46,7 @@ class Rule:
         return numberofclosealivecell
 
     def ruledecision(self,damier,x,y):
-        numberofclosecell=self.classicRule(damier,[x,y])
+        numberofclosecell=self.classicRule(damier, [x, y])
         if ((numberofclosecell==3) and (damier.cells[y][x]==0)):
             damier.nextcells[y][x]=1
         elif ((numberofclosecell!=3) and (numberofclosecell!=2) and (damier.cells[y][x]==1)):
